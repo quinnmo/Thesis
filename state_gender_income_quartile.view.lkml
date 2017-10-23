@@ -1,6 +1,22 @@
 view: state_gender_income_quartile {
   sql_table_name: Income_life_expectancy.state_gender_income_quartile ;;
 
+  dimension: st {         #state code
+    label: "State FIPPS"
+    type: number
+    sql: ${TABLE}.st ;;
+  }
+
+  dimension: state_abbrv {
+    type: string
+    sql: ${TABLE}.stateabbrv ;;
+  }
+
+  dimension: statename {
+    type: string
+    sql: ${TABLE}.statename ;;
+  }
+
   dimension: count_q1_f {
     type: number
     sql: ${TABLE}.count_q1_F ;;
@@ -41,42 +57,52 @@ view: state_gender_income_quartile {
     sql: ${TABLE}.count_q4_M ;;
   }
 
-  dimension: le_agg_slope_q1_f {
+#Regression Estimates of Female Life Expectancy Trends by Income Quartile
+
+ dimension: le_slope_q1_f {
+    label: "Regression Estimate for Female LE Q1"
     type: number
     sql: ${TABLE}.le_agg_slope_q1_F ;;
   }
 
-  dimension: le_agg_slope_q1_m {
+  dimension: le_slope_q1_m {
+    label: "Regression Estimate for Male LE Q1"
     type: number
-    sql: ${TABLE}.le_agg_slope_q1_M ;;
+    sql: ${TABLE}.le_slope_q1_M ;;
   }
 
-  dimension: le_agg_slope_q2_f {
+  dimension: le_slope_q2_f {
+    label: "Regression Estimate for Female LE Q2"
     type: number
     sql: ${TABLE}.le_agg_slope_q2_F ;;
   }
 
-  dimension: le_agg_slope_q2_m {
+  dimension: le_slope_q2_m {
+    label: "Regression Estimate for Male LE Q2"
     type: number
     sql: ${TABLE}.le_agg_slope_q2_M ;;
   }
 
-  dimension: le_agg_slope_q3_f {
+  dimension: le_slope_q3_f {
+    label: "Regression Estimate for Female LE Q3"
     type: number
     sql: ${TABLE}.le_agg_slope_q3_F ;;
   }
 
-  dimension: le_agg_slope_q3_m {
+  dimension: le_slope_q3_m {
+    label: "Regression Estimate for Male LE Q3"
     type: number
     sql: ${TABLE}.le_agg_slope_q3_M ;;
   }
 
-  dimension: le_agg_slope_q4_f {
+  dimension: le_slope_q4_f {
+    label: "Regression Estimate for Female LE Q4"
     type: number
     sql: ${TABLE}.le_agg_slope_q4_F ;;
   }
 
-  dimension: le_agg_slope_q4_m {
+  dimension: le_slope_q4_m {
+    label: "Regression Estimate for Male LE Q4"
     type: number
     sql: ${TABLE}.le_agg_slope_q4_M ;;
   }
@@ -121,100 +147,85 @@ view: state_gender_income_quartile {
     sql: ${TABLE}.le_raceadj_slope_q4_M ;;
   }
 
-  dimension: sd_le_agg_slope_q1_f {
-    type: number
-    sql: ${TABLE}.sd_le_agg_slope_q1_F ;;
-  }
-
-  dimension: sd_le_agg_slope_q1_m {
-    type: number
-    sql: ${TABLE}.sd_le_agg_slope_q1_M ;;
-  }
-
-  dimension: sd_le_agg_slope_q2_f {
-    type: number
-    sql: ${TABLE}.sd_le_agg_slope_q2_F ;;
-  }
-
-  dimension: sd_le_agg_slope_q2_m {
-    type: number
-    sql: ${TABLE}.sd_le_agg_slope_q2_M ;;
-  }
-
-  dimension: sd_le_agg_slope_q3_f {
-    type: number
-    sql: ${TABLE}.sd_le_agg_slope_q3_F ;;
-  }
-
-  dimension: sd_le_agg_slope_q3_m {
-    type: number
-    sql: ${TABLE}.sd_le_agg_slope_q3_M ;;
-  }
-
-  dimension: sd_le_agg_slope_q4_f {
-    type: number
-    sql: ${TABLE}.sd_le_agg_slope_q4_F ;;
-  }
-
-  dimension: sd_le_agg_slope_q4_m {
-    type: number
-    sql: ${TABLE}.sd_le_agg_slope_q4_M ;;
-  }
-
-  dimension: sd_le_raceadj_slope_q1_f {
-    type: number
-    sql: ${TABLE}.sd_le_raceadj_slope_q1_F ;;
-  }
-
-  dimension: sd_le_raceadj_slope_q1_m {
-    type: number
-    sql: ${TABLE}.sd_le_raceadj_slope_q1_M ;;
-  }
-
-  dimension: sd_le_raceadj_slope_q2_f {
-    type: number
-    sql: ${TABLE}.sd_le_raceadj_slope_q2_F ;;
-  }
-
-  dimension: sd_le_raceadj_slope_q2_m {
-    type: number
-    sql: ${TABLE}.sd_le_raceadj_slope_q2_M ;;
-  }
-
-  dimension: sd_le_raceadj_slope_q3_f {
-    type: number
-    sql: ${TABLE}.sd_le_raceadj_slope_q3_F ;;
-  }
-
-  dimension: sd_le_raceadj_slope_q3_m {
-    type: number
-    sql: ${TABLE}.sd_le_raceadj_slope_q3_M ;;
-  }
-
-  dimension: sd_le_raceadj_slope_q4_f {
-    type: number
-    sql: ${TABLE}.sd_le_raceadj_slope_q4_F ;;
-  }
-
-  dimension: sd_le_raceadj_slope_q4_m {
-    type: number
-    sql: ${TABLE}.sd_le_raceadj_slope_q4_M ;;
-  }
-
-  dimension: st {
-    type: number
-    sql: ${TABLE}.st ;;
-  }
-
-  dimension: stateabbrv {
-    type: string
-    sql: ${TABLE}.stateabbrv ;;
-  }
-
-  dimension: statename {
-    type: string
-    sql: ${TABLE}.statename ;;
-  }
+#   dimension: sd_le_agg_slope_q1_f {
+#     type: number
+#     sql: ${TABLE}.sd_le_agg_slope_q1_F ;;
+#   }
+#
+#   dimension: sd_le_agg_slope_q1_m {
+#     type: number
+#     sql: ${TABLE}.sd_le_agg_slope_q1_M ;;
+#   }
+#
+#   dimension: sd_le_agg_slope_q2_f {
+#     type: number
+#     sql: ${TABLE}.sd_le_agg_slope_q2_F ;;
+#   }
+#
+#   dimension: sd_le_agg_slope_q2_m {
+#     type: number
+#     sql: ${TABLE}.sd_le_agg_slope_q2_M ;;
+#   }
+#
+#   dimension: sd_le_agg_slope_q3_f {
+#     type: number
+#     sql: ${TABLE}.sd_le_agg_slope_q3_F ;;
+#   }
+#
+#   dimension: sd_le_agg_slope_q3_m {
+#     type: number
+#     sql: ${TABLE}.sd_le_agg_slope_q3_M ;;
+#   }
+#
+#   dimension: sd_le_agg_slope_q4_f {
+#     type: number
+#     sql: ${TABLE}.sd_le_agg_slope_q4_F ;;
+#   }
+#
+#   dimension: sd_le_agg_slope_q4_m {
+#     type: number
+#     sql: ${TABLE}.sd_le_agg_slope_q4_M ;;
+#   }
+#
+#   dimension: sd_le_raceadj_slope_q1_f {
+#     type: number
+#     sql: ${TABLE}.sd_le_raceadj_slope_q1_F ;;
+#   }
+#
+#   dimension: sd_le_raceadj_slope_q1_m {
+#     type: number
+#     sql: ${TABLE}.sd_le_raceadj_slope_q1_M ;;
+#   }
+#
+#   dimension: sd_le_raceadj_slope_q2_f {
+#     type: number
+#     sql: ${TABLE}.sd_le_raceadj_slope_q2_F ;;
+#   }
+#
+#   dimension: sd_le_raceadj_slope_q2_m {
+#     type: number
+#     sql: ${TABLE}.sd_le_raceadj_slope_q2_M ;;
+#   }
+#
+#   dimension: sd_le_raceadj_slope_q3_f {
+#     type: number
+#     sql: ${TABLE}.sd_le_raceadj_slope_q3_F ;;
+#   }
+#
+#   dimension: sd_le_raceadj_slope_q3_m {
+#     type: number
+#     sql: ${TABLE}.sd_le_raceadj_slope_q3_M ;;
+#   }
+#
+#   dimension: sd_le_raceadj_slope_q4_f {
+#     type: number
+#     sql: ${TABLE}.sd_le_raceadj_slope_q4_F ;;
+#   }
+#
+#   dimension: sd_le_raceadj_slope_q4_m {
+#     type: number
+#     sql: ${TABLE}.sd_le_raceadj_slope_q4_M ;;
+#   }
 
   measure: count {
     type: count

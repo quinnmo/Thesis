@@ -56,4 +56,45 @@ view: natl_gender_inc_pctile {
     type: count
     drill_fields: []
   }
+
+  measure: avg_life_expectancy {
+    type: average
+    sql: ${le_agg} ;;
+  }
+
+  measure: avg_LE_bottom10 {
+    type: average
+    sql: ${le_agg} ;;
+    filters: {
+      field: pctile
+      value: "<=10"
+    }
+  }
+
+  measure: avg_LE_top10 {
+    type: average
+    sql: ${le_agg} ;;
+    filters: {
+      field: pctile
+      value: ">=90"
+    }
+  }
+
+#   measure: avg_raceadjLE_bottom10 {
+#     type: average
+#     sql: ${le_raceadj} ;;
+#     filters: {
+#       field: pctile
+#       value: "<=10"
+#     }
+#   }
+#
+#   measure: avg_raceadjLE_top10 {
+#     type: average
+#     sql: ${le_raceadj} ;;
+#     filters: {
+#       field: pctile
+#       value: ">=90"
+#     }
+#   }
 }

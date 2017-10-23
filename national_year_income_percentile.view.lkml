@@ -1,4 +1,4 @@
-view: natl_yr_gender_inc_pctile {
+view: natl_yr_inc_pctile {
   sql_table_name: Income_life_expectancy.national_year_gender_income_percentile ;;
 
   dimension: count {
@@ -23,7 +23,7 @@ view: natl_yr_gender_inc_pctile {
     sql: ${TABLE}.le_agg ;;
   }
 
-  dimension: le_raceadj {
+  dimension: le_raceadj {                       #use this for life expectancy
     label: "Life Expectancy (Race Adjusted)"
     type: number
     sql: ${TABLE}.le_raceadj ;;
@@ -54,4 +54,14 @@ view: natl_yr_gender_inc_pctile {
     type: count
     drill_fields: [year, pctile, life_expectancy, le_raceadj]
   }
+
+  measure: avg_life_expectancy {
+    type: average
+    sql: ${life_expectancy} ;;
+  }
+
+
+
+
+
 }
