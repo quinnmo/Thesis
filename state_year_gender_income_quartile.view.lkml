@@ -201,7 +201,7 @@ view: state_year_gender_income_quartile {
     sql: ${TABLE}.sd_le_raceadj_q4_M ;;
   }
 
-  dimension: st {
+  dimension: state_id {       # State FIPS
     type: number
     sql: ${TABLE}.st ;;
   }
@@ -217,7 +217,7 @@ view: state_year_gender_income_quartile {
   }
 
   dimension: year {
-    type: number
+    type: string
     sql: ${TABLE}.year ;;
   }
 
@@ -225,4 +225,57 @@ view: state_year_gender_income_quartile {
     type: count
     drill_fields: [statename]
   }
+
+# Average LE gender and quartile
+
+  measure: avg_LE_f_q1 {
+    type: average
+    sql: ${le_raceadj_q1_f} ;;
+    value_format: "0.00"
+  }
+
+  measure: avg_LE_f_q4 {
+    type: average
+    sql: ${le_agg_q4_f} ;;
+    value_format: "0.00"
+  }
+
+  measure: avg_LE_m_q1 {
+    type: average
+    sql: ${le_raceadj_q1_m} ;;
+    value_format: "0.00"
+  }
+
+  measure: avg_LE_m_q4 {
+    type: average
+    sql: ${le_raceadj_q4_m} ;;
+    value_format: "0.00"
+  }
+
+# Average LE of males and females (collapsed across quartiles)
+
+measure: avg_LE_females {
+  type: average
+  sql: (${le_raceadj_q1_f} + ${le_raceadj_q2_f} + ${le_raceadj_q3_f} + ${le_raceadj_q4_f})/4 ;;
+  value_format: "0.00"
+}
+
+measure: avg_LE_males {
+  type: average
+  sql: (${le_raceadj_q1_m} + ${le_raceadj_q2_m} + ${le_raceadj_q3_m} + ${le_raceadj_q4_m})/4 ;;
+  value_format: "0.00"
+}
+# Average LE of quartiles (collapsed across gender)
+
+measure: avg_LE_q1 {
+  type: average
+  sql:  (${le_raceadj_q1_f} + ${le_raceadj_q1_m})/2 ;;
+  value_format: "0.00"
+}
+
+measure: avg_LE_q4 {
+  type: average
+  sql: (${le_raceadj_q4_f} + ${le_raceadj_q4_m})/2 ;;
+  value_format: "0.00"
+}
 }

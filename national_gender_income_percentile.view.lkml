@@ -11,7 +11,7 @@ view: natl_gender_inc_pctile {
     sql: ${TABLE}.gnd ;;
   }
 
-  dimension: avg_hh_inc {
+  dimension: avg_hh_inc {           ## Calcaulated across 2001-2014 among working age indvs 38-61)
     label: "Average Household Income"
     type: number
     sql: ${TABLE}.hh_inc ;;
@@ -59,7 +59,8 @@ view: natl_gender_inc_pctile {
 
   measure: avg_life_expectancy {
     type: average
-    sql: ${le_agg} ;;
+    sql: ${le_raceadj} ;;
+
   }
 
   measure: avg_LE_bottom10 {
@@ -69,6 +70,7 @@ view: natl_gender_inc_pctile {
       field: pctile
       value: "<=10"
     }
+    value_format: "0.00"
   }
 
   measure: avg_LE_top10 {
@@ -78,7 +80,30 @@ view: natl_gender_inc_pctile {
       field: pctile
       value: ">=90"
     }
+    value_format: "0.00"
   }
+
+  measure: avg_LE_bottom1{
+    type: average
+    sql: ${le_raceadj} ;;
+    filters: {
+      field: pctile
+      value: "<=1"
+    }
+    value_format: "0.00"
+  }
+
+  measure: avg_LE_top1 {
+    type: average
+    sql: ${le_raceadj} ;;
+    filters: {
+      field: pctile
+      value: ">=100"
+    }
+    value_format: "0.00"
+  }
+
+
 
 #   measure: avg_raceadjLE_bottom10 {
 #     type: average

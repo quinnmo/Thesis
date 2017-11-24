@@ -1,7 +1,7 @@
 view: state_gender_income_quartile {
   sql_table_name: Income_life_expectancy.state_gender_income_quartile ;;
 
-  dimension: st {         #state code
+  dimension: state_id {         #state code
     label: "State FIPPS"
     type: number
     sql: ${TABLE}.st ;;

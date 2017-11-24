@@ -6,10 +6,10 @@ view: natl_yr_inc_pctile {
     sql: ${TABLE}.count ;;
   }
 
-#   dimension: gender {                       #how do i cast to string?
-#     type: string
-#     sql: CAST(${TABLE}.gnd) AS string ;;
-#   }
+   dimension: gender {                       #how do i cast to string?
+     type: yesno
+     sql: CASE WHEN ${TABLE}.gnd = "true" THEN 'F' ELSE 'M' END ;;
+   }
 
   dimension: avg_hh_inc {
     label: "Average Household Income"
@@ -46,7 +46,7 @@ view: natl_yr_inc_pctile {
   }
 
   dimension: year {
-    type: number
+    type: string
     sql: ${TABLE}.year ;;
   }
 
@@ -58,10 +58,27 @@ view: natl_yr_inc_pctile {
   measure: avg_life_expectancy {
     type: average
     sql: ${life_expectancy} ;;
+    value_format: "0.00"
   }
 
+  measure: avg_le_top1 {
+    type: average
+    sql: ${le_raceadj} ;;
+    filters: {
+      field: pctile
+      value: ">=99"
+    }
+    value_format: "0.00"
+  }
 
-
-
+  measure: avg_le_bottom1 {
+    type: average
+    sql: ${le_raceadj} ;;
+    filters: {
+      field: pctile
+      value: "<=1"
+    }
+    value_format: "0.00"
+  }
 
 }

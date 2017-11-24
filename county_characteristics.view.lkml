@@ -3,16 +3,17 @@ view: county_characteristics {
 
 # County
 
-  dimension: cty_name {
-    hidden: yes
-    type: string
-    sql: ${TABLE}.county_name ;;
-  }
-
   dimension: county_code {      #county FIPS code
+    primary_key: yes
     label: "County code"
     type: string
-    sql: REPLACE(CAST(${TABLE}.cty as string),',','');;
+    sql: ${TABLE}.cty;;
+  }
+
+  dimension: cty_name {
+    label: "County name"
+    type: string
+    sql: ${TABLE}.county_name ;;
   }
 
   dimension: cty_pop2000 {
@@ -21,9 +22,7 @@ view: county_characteristics {
     sql: ${TABLE}.cty_pop2000 ;;
   }
 
-
   dimension: county_state {
-    primary_key: yes
     type: string
     sql: concat(${cty_name}, ',', ' ', ${state_name}) ;;
   }
@@ -91,15 +90,18 @@ view: county_characteristics {
   }
 
   dimension: gini99 {
-    label: "Gini Index Within Bottom 99%"
+    label: "Gini Index"
     type: number
-    sql: ${TABLE}.gini99 ;;
+    sql: ${TABLE}.gini99  ;;
+    value_format: "0.00"
   }
 
-  dimension: social_capital {         # Social cohesion!
+  dimension: social_capital {
     label: "Social Capital Index"
+    description: "Standardized index combining measures of voter turnout rates, the fraction of people who return their census forms, and measures of participation in community organizations"
     type: number
     sql: ${TABLE}.scap_ski90pcm ;;
+    value_format: "0.000"
   }
 
   dimension: inc_share_1perc {
@@ -108,10 +110,11 @@ view: county_characteristics {
     sql: ${TABLE}.inc_share_1perc ;;
   }
 
-  dimension: poor_share {
+  dimension: poor_share {     #Fraction of population below the poverty line
     label: "Poverty Rate"
     type: number
     sql: ${TABLE}.poor_share ;;
+    value_format: "0.00%"
   }
 
   dimension: e_rank_b {           # Expected Rank at p25
@@ -122,9 +125,19 @@ view: county_characteristics {
 
   dimension: avg_hh_inc {
     label: "Avg Household Income"
+    description: "Aggregate household income in the 2000 Census divided by the number of people aged 16-64"
     type: number
     sql: ${TABLE}.hhinc00 ;;
+    value_format: "$#,##0.00"
   }
+
+  measure: avg_hh_inc_sum {
+    label: "Avg Household Income 2000"
+    type: sum
+    sql: ${avg_hh_inc} ;;
+    value_format: "$#,##0.00"
+  }
+
 
 # Smokers by Quartile
 
@@ -132,6 +145,13 @@ view: county_characteristics {
     label: "Fraction Current Smokers in Q1"
     type: number
     sql: ${TABLE}.cur_smoke_q1 ;;
+
+  }
+
+  measure: smokers_q1 {
+    type: number
+    sql: ${smoke_q1} ;;
+    value_format: "0.00%"
   }
 
   dimension: smoke_q2 {
@@ -140,10 +160,22 @@ view: county_characteristics {
     sql: ${TABLE}.cur_smoke_q2 ;;
   }
 
+  measure: smokers_q2 {
+    type: number
+    sql: ${smoke_q2} ;;
+    value_format: "0.00%"
+  }
+
   dimension: smoke_q3 {
     label: "Fraction Current Smokers in Q3"
     type: number
     sql: ${TABLE}.cur_smoke_q3 ;;
+  }
+
+  measure: smokers_q3 {
+    type: number
+    sql: ${smoke_q3} ;;
+    value_format: "0.00%"
   }
 
   dimension: smoke_q4 {
@@ -152,12 +184,25 @@ view: county_characteristics {
     sql: ${TABLE}.cur_smoke_q4 ;;
   }
 
+  measure: smokers_q4 {
+    type: number
+    sql: ${smoke_q4} ;;
+    value_format: "0.00%"
+  }
+
   # Obesity by Quartile
 
   dimension: obese_q1 {
     label: "Fraction Obese in Q1"
     type: number
     sql: ${TABLE}.bmi_obese_q1 ;;
+    value_format: "0.00%"
+  }
+
+  measure: pcnt_obese_q1 {
+    type: sum
+    sql: ${obese_q1} ;;
+    value_format: "0.00%"
   }
 
   dimension: obese_q2 {
@@ -166,16 +211,34 @@ view: county_characteristics {
     sql: ${TABLE}.bmi_obese_q2 ;;
   }
 
+  measure: pcnt_obese_q2 {
+    type: sum
+    sql: ${obese_q2} ;;
+    value_format: "0.00%"
+  }
+
   dimension: obese_q3 {
     label: "Fraction Obese in Q3"
     type: number
     sql: ${TABLE}.bmi_obese_q3 ;;
   }
 
+  measure: pcnt_obese_q3 {
+    type: sum
+    sql: ${obese_q3} ;;
+    value_format: "0.00%"
+  }
+
   dimension: obese_q4 {
     label: "Fraction Obese in Q4"
     type: number
     sql: ${TABLE}.bmi_obese_q4 ;;
+  }
+
+  measure: pcnt_obese_q4 {
+    type: sum
+    sql: ${obese_q4} ;;
+    value_format: "0.00%"
   }
 
 # Education
@@ -189,6 +252,14 @@ view: county_characteristics {
     label: "Percent College Grads"
     type: number
     sql: ${TABLE}.cs_educ_ba ;;
+     value_format: "0.0\%"
+  }
+
+  measure: pcnt_college_grads {
+    label: "Percent College Grads"
+    type: sum
+    sql: ${cs_educ_ba} ;;
+    value_format: "0.00\%"
   }
 
   dimension: dropout_rate {
@@ -204,16 +275,28 @@ view: county_characteristics {
 
 # Race Demographics
 
- dimension: percent_black {
-    label: "Percent Black"
+ dimension: pcnt_black {
     type: number
     sql: ${TABLE}.cs_frac_black ;;
   }
 
-  dimension: percent_hisp {
-    label: "Percent Hispanic"
+  dimension: pcnt_hisp {
     type: number
     sql: ${TABLE}.cs_frac_hisp ;;
+  }
+
+  measure: percent_black {
+    label: "Percent Black"
+    type: sum
+    sql: ${pcnt_black} ;;
+    value_format: "0.00\%"
+  }
+
+  measure: percent_hispanic {
+    label: "Percent Hispanic"
+    type: sum
+    sql: ${pcnt_hisp} ;;
+    value_format: "0.00\%"
   }
 
   dimension: racial_segregation {
@@ -227,6 +310,13 @@ view: county_characteristics {
     label: "Exercised in Past 30 Days in Q1"
     type: number
     sql: ${TABLE}.exercise_any_q1 ;;
+    value_format: "0.00%"
+  }
+
+  measure: pcnt_exercerise_q1 {
+    type: sum
+    sql: ${exercise_q1} ;;
+    value_format: "0.00%"
   }
 
   dimension: exercise_q2 {
@@ -235,37 +325,71 @@ view: county_characteristics {
     sql: ${TABLE}.exercise_any_q2 ;;
   }
 
+  measure: pcnt_exercerise_q2 {
+    type: sum
+    sql: ${exercise_q2} ;;
+    value_format: "0.00%"
+  }
+
   dimension: exercise_q3 {
     label: "Exercised in Past 30 Days in Q3"
     type: number
     sql: ${TABLE}.exercise_any_q3 ;;
   }
 
+  measure: pcnt_exercerise_q3 {
+    type: sum
+    sql: ${exercise_q3} ;;
+    value_format: "0.00%"
+  }
+
   dimension: exercise_q4 {
     label: "Exercised in Past 30 Days in Q4"
     type: number
     sql: ${TABLE}.exercise_any_q4 ;;
+    value_format: "0.00%"
+  }
+
+  measure: pcnt_exercerise_q4 {
+    type: sum
+    sql: ${exercise_q4} ;;
+    value_format: "0.00%"
   }
 
 
 # Migration Rates
 
   dimension: mig_inflow {
-    label: "Migration Inflow Rate"
+    label: "Migration Inflow"
     type: number
     sql: ${TABLE}.mig_inflow ;;
+    value_format: "0.00%"
+  }
+
+  measure: migration_inflow_rate{
+    type: sum
+    sql: ${mig_inflow} ;;
+    value_format: "0.00%"
   }
 
   dimension: mig_outflow {
-    label: "Migration Outflow Rate"
+    label: "Migration Outflow"
     type: number
     sql: ${TABLE}.mig_outflow ;;
+    value_format: "0.00%"
   }
 
-  dimension: born_foreign {
-    label: "Percent Foreign Born"
+  measure: migration_outflow_rate {
+    type: sum
+    sql: ${mig_outflow} ;;
+    value_format: "0.00%"
+  }
+
+  dimension: born_foreign {           # try to add % sign
+    label: "Percent Immigrants"
     type: number
     sql: ${TABLE}.cs_born_foreign ;;
+    value_format: "0.00\%"
   }
 
 # Other Factors
@@ -275,6 +399,14 @@ view: county_characteristics {
     sql: ${TABLE}.pop_density ;;
   }
 
+  measure: population_density {
+    label: "Population Density in 2000"
+    description: "Population divided by the land area in square miles"
+    type: sum
+    sql: ${pop_density} ;;
+    value_format: "#,##0.00"
+  }
+
   dimension: cs_fam_wkidsinglemom {
     label: "Fraction of Children with Single Mother"
     type: number
@@ -282,7 +414,7 @@ view: county_characteristics {
   }
 
   dimension: crime_total {
-    label: "Total Crime Rate"
+    label: "Crime Rate"
     type: number
     sql: ${TABLE}.crime_total ;;
   }
@@ -303,6 +435,7 @@ view: county_characteristics {
     label: "Unemployment Rate in 2000"
     type: number
     sql: ${TABLE}.unemp_rate ;;
+  value_format: "0.00%"
   }
 
   dimension: labor_force {
@@ -318,18 +451,26 @@ view: county_characteristics {
     drill_fields: [state_name, county_state, cz_name]
   }
 
-  measure:  total_frac_smokers_Q1 {
-    type: sum
-    sql: ${smoke_q1} ;;
-  }
-
   measure: gini_measure {
     type: sum
     sql:  ${gini99};;
-    drill_fields: [unemp_rate, mig_inflow, percent_black, percent_hisp,  e_rank_b, social_capital]
+    drill_fields: [unemp_rate, mig_inflow, pcnt_black, pcnt_hisp,  e_rank_b, social_capital]
 }
 
+#   measure: total_avg_LE {
+#     type: average
+#     sql: (${county_gender_income_quartile.le_agg_q1_f} + ${county_gender_income_quartile.le_agg_q2_f} + ${county_gender_income_quartile.le_agg_q3_f} + ${county_gender_income_quartile.le_agg_q4_f} + ${county_gender_income_quartile.le_agg_q1_m} + ${county_gender_income_quartile.le_agg_q2_m} + ${county_gender_income_quartile.le_agg_q3_m} + ${county_gender_income_quartile.le_agg_q4_m})/8 ;;
+#     drill_fields: [county_state, social_capital, avg_hh_inc, ]
+# }
 
+#  measure: total_avg_LE_counties {
+#   label: "Total Avg Life Expectancy"
+#   description: "County names in tooltip"
+#   type: average
+#   sql: (${county_gender_income_quartile.le_agg_q1_f} + ${county_gender_income_quartile.le_agg_q2_f} + ${county_gender_income_quartile.le_agg_q3_f} + ${county_gender_income_quartile.le_agg_q4_f} + ${county_gender_income_quartile.le_agg_q1_m} + ${county_gender_income_quartile.le_agg_q2_m} + ${county_gender_income_quartile.le_agg_q3_m} + ${county_gender_income_quartile.le_agg_q4_m})/8 ;;
+#   drill_fields: [county_state, social_capital, avg_hh_inc, ]
+#   html: | {{rendered_value}} || County: {{county_characteristics.cty_name._rendered_value }} ;;
+# }
 
 
 # Mortality rates for heart attack, heart failure, pneumonia
