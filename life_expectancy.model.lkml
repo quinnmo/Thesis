@@ -1,4 +1,4 @@
-connection: "quinn_thesis"
+connection: "quinnbq"
 
 # include all the views
 include: "*.view"

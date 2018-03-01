@@ -190,6 +190,12 @@ view: county_characteristics {
     value_format: "0.00%"
   }
 
+ measure: avg_pcnt_smokers_all_qs {
+    label: "Percent of Population that Smokes"
+    type: sum
+    sql: (${smoke_q1} + ${smoke_q2} + ${smoke_q3} + ${smoke_q4})/4 ;;
+  }
+
   # Obesity by Quartile
 
   dimension: obese_q1 {
@@ -241,6 +247,13 @@ view: county_characteristics {
     value_format: "0.00%"
   }
 
+  measure: avg_pcnt_obese_all_qs {
+    type: sum
+    label: "Percent of Pop that is Obese"
+    sql:(${obese_q1} + ${obese_q2} + ${obese_q3} + ${obese_q4})/4 ;;
+    value_format: "0.00%"
+  }
+
 # Education
 
   dimension: tuition {
@@ -278,11 +291,13 @@ view: county_characteristics {
  dimension: pcnt_black {
     type: number
     sql: ${TABLE}.cs_frac_black ;;
+    label: "Percent Black"
   }
 
   dimension: pcnt_hisp {
     type: number
     sql: ${TABLE}.cs_frac_hisp ;;
+    label: "Percent Hispanic"
   }
 
   measure: percent_black {
@@ -356,6 +371,12 @@ view: county_characteristics {
     value_format: "0.00%"
   }
 
+  measure: avg_pcnt_exercise_all_qs {
+    label: "Percent of Pop that Exercised in Past 30 Days"
+    type: sum
+    sql: (${exercise_q1} + ${exercise_q2} + ${exercise_q3} + ${exercise_q4})/4 ;;
+    value_format: "0.00%"
+  }
 
 # Migration Rates
 
@@ -397,6 +418,7 @@ view: county_characteristics {
  dimension: pop_density {
     type: number
     sql: ${TABLE}.pop_density ;;
+    label: "Population Density"
   }
 
   measure: population_density {
@@ -414,9 +436,17 @@ view: county_characteristics {
   }
 
   dimension: crime_total {
-    label: "Crime Rate"
+    label: "Crime Rate 1"
     type: number
     sql: ${TABLE}.crime_total ;;
+  }
+
+  dimension: crime_rate {
+    label: "Crime Rate"
+    type: number
+    description: "Number of Crimes per 100,000 People"
+    sql:  ${TABLE}.crime_total *  100,000 ;;
+    value_format: "0.00"
   }
 
   dimension: subcty_exp_pc {
@@ -435,7 +465,7 @@ view: county_characteristics {
     label: "Unemployment Rate in 2000"
     type: number
     sql: ${TABLE}.unemp_rate ;;
-  value_format: "0.00%"
+    value_format: "0.00%"
   }
 
   dimension: labor_force {
